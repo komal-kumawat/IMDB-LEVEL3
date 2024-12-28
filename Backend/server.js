@@ -36,6 +36,11 @@ app.post('/movies', async (req, res) => {
     }
 
     try {
+         // check if movie already exists in the database
+        const existingMovie = await Movie.findOne({title});
+        if(existingMovie){
+            return res.status(409).json({error:"movie already exists"});
+        }
         // Log the request URL for debugging
         const omdbUrl = `https://www.omdbapi.com/?t=${title}&apikey=${process.env.OMDB_API_KEY}`;
         console.log(`Requesting movie data from OMDB: ${omdbUrl}`);
